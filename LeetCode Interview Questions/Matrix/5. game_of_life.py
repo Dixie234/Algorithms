@@ -22,7 +22,7 @@ def gameOfLife(board: List[List[int]]) -> None:
                 new_board[i][j] = 0
             if position_value == 0 and neibours == 3:
                 new_board[i][j] = 1
-                
+
     for i in range(column_length):
         for j in range(row_length):
             board[i][j] = new_board[i][j]
@@ -49,19 +49,3 @@ board = [[0,1,0],
          [0,0,0]]
 gameOfLife(board)
 print(board)
-
-# lower_bound = 0
-# row_length = len(board[0])
-# column_length = len(board)
-# position_adjustments = [(-1, -1), (0, -1), (1, -1),
-#                         (-1, 0), (1, 0),
-#                         (-1, 1), (0, 1), (1, 1)]
-# current_position = (1, 2)
-# available_positions = []
-# for adjustment in position_adjustments:
-#     column, row = current_position
-#     adjust_column, adjust_row = adjustment
-#     adjusted_column, adjusted_row = column + adjust_column, row + adjust_row
-#     if (adjusted_column < column_length and adjusted_column >= lower_bound) and (adjusted_row < row_length and adjusted_row >= lower_bound):
-#         available_positions.append((adjusted_column, adjusted_row))
-# print(available_positions)

@@ -2,17 +2,22 @@ from typing import List
 
 
 def summaryRanges(nums: List[int]) -> List[str]:
+    if len(nums) == 0:
+        return []
     result = []
-    prev = nums[0]
+    nums.append(nums[len(nums) - 1] + 2)
     start = nums[0]
     stop = None
-    for i in range(1, len(nums)):
+    for i in range(len(nums) - 1):
         current = nums[i]
-        if current - prev > 1:
-            stop = prev
-            result.append(create_string(start, stop))
-            start = nums[i]
-        prev = current
+        next = nums[i + 1]
+        if nums[i + 1] - current > 1:
+            stop = current
+            if start == stop:
+                result.append(f"{start}")
+            else:
+                result.append(f"{start}->{stop}")
+            start = next
     return result
 
 def create_string(start, stop):
@@ -25,4 +30,5 @@ def create_string(start, stop):
 nums = [0,1,2,4,5,7]
 result = summaryRanges(nums)
 print(result)
+
 

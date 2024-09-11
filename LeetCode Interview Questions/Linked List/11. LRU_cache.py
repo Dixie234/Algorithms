@@ -1,4 +1,4 @@
-from collections import OrderedDict, deque
+from collections import OrderedDict
 
 #Ordered dict acts as a Dictionary and LinkedList combined
 class LRUCache:

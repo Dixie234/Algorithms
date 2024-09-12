@@ -20,8 +20,7 @@ class LRUCache:
         if key in self.cache:
             self.cache.move_to_end(key)     
         elif len(self.cache) >= self.capacity:
-            lru_key = next(iter(self.cache))
-            del self.cache[lru_key]
+            self.cache.popitem(last=False)
         
         self.cache[key] = value
 

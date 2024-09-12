@@ -133,7 +133,24 @@ def deleteDuplicates(head: Optional[ListNode]) -> Optional[ListNode]:
     if not head.next:
         return head
     
-    #to do
+    dupe_start = None
+    dummy = ListNode(None, head)
+    prev = dummy
+    curr = head
+    while curr:
+        curr_val = curr.val
+        next_val = curr.next.val if curr.next else None
+        if curr_val == next_val:
+            if not dupe_start:
+                dupe_start = curr
+        else:
+            if dupe_start:
+                prev.next = curr.next
+                dupe_start = None
+            else:
+                prev = curr
+        curr = curr.next
+    return dummy.next
 
         
 #delete duplicate nodes

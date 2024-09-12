@@ -5,7 +5,7 @@ class ListNode:
         self.val = val
         self.next = next
 
-def partition(head: Optional[ListNode], x: int) -> Optional[ListNode]:
+def partition_1(head: Optional[ListNode], x: int) -> Optional[ListNode]:
     if not head:
         return None
     if not head.next:

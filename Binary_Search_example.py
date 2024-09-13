@@ -27,7 +27,7 @@ def binary_search_recur(value, arr, high, low):
             return binary_search_recur(value, arr, med - 1, low)
     else:
         return -1
-
+    
 binary_search(arr[0], arr)
 binary_search(arr[20], arr)
 binary_search(arr[99], arr)

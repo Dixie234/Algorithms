@@ -7,7 +7,7 @@ class TreeNode:
         self.left = left
         self.right = right
 
-
+#using BFS (queue)
 def invertTree(root: Optional[TreeNode]) -> Optional[TreeNode]:
     if not root:
         return None
@@ -19,6 +19,18 @@ def invertTree(root: Optional[TreeNode]) -> Optional[TreeNode]:
             p.left, p.right = p.left, p.right
             queue.append(p.left)
             queue.append(p.right)
+
+    return root
+
+#Invert tree using DFS (recusion)
+def invertTree(root: Optional[TreeNode]) -> Optional[TreeNode]:
+    if not root:
+        return None
+    
+    root.left, root.right = root.right, root.left
+    
+    invertTree(root.left)
+    invertTree(root.right)
 
     return root
 

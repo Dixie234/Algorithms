@@ -22,24 +22,15 @@ def bfs(root:Optional[TreeNode]) -> None:
         if node.right:
             queue.append(node.right)
 
-def dfs(root:Optional[TreeNode]) -> None:
-    if not root:
-        return
-    
-    print(root.val, end=" ")
-
-    dfs(root.left)
-    dfs(root.right)
-
 def inorder_dfs(root:Optional[TreeNode]) -> None:
     if not root:
         return
     
-    dfs(root.left)
+    inorder_dfs(root.left)
 
     print(root.val, end=" ")
 
-    dfs(root.right)
+    inorder_dfs(root.right)
 
 def preorder_dfs(root:Optional[TreeNode]) -> None:
     if not root:
@@ -47,14 +38,14 @@ def preorder_dfs(root:Optional[TreeNode]) -> None:
     
     print(root.val, end=" ")
 
-    dfs(root.left)
-    dfs(root.right)
+    preorder_dfs(root.left)
+    preorder_dfs(root.right)
 
 def postorder_dfs(root:Optional[TreeNode]) -> None:
     if not root:
         return
     
-    dfs(root.left)
-    dfs(root.right)
+    postorder_dfs(root.left)
+    postorder_dfs(root.right)
     
     print(root.val, end=" ")

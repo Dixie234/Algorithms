@@ -35,7 +35,7 @@ node5 = Node(5, node2, node1)
 node6 = Node(6, node4, node3)
 node7 = Node(7, node6, node5)
 
-result = connect_perfect_tree(node7)
+result = connect(node7)
     
 
 

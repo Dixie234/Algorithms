@@ -1,6 +1,5 @@
 from typing import Optional
 
-
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -10,11 +9,20 @@ class TreeNode:
 class BSTIterator:
 
     def __init__(self, root: Optional[TreeNode]):
-        self.root = root
+        self.vals = [-1]
+        self.dfs(root)
+        self.index = 0
 
     def next(self) -> int:
-        return 0
-        
+        self.index += 1
+        return self.vals[self.index]
 
     def hasNext(self) -> bool:
-        return False
+        return self.index + 1 < len(self.vals)
+    
+    def dfs(self, root:Optional[TreeNode]):
+        if not root:
+            return
+        self.dfs(root.left)
+        self.vals.append(root.val)
+        self.dfs(root.right)

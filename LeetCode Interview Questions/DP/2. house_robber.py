@@ -2,29 +2,32 @@ from typing import List
 
 
 def rob(nums: List[int]) -> int:
-    total = []
-    prev_index = -1
-    i = 1
-    while i < len(nums):
-        prev = nums[i - 1]
-        current = nums[i]
+    if len(nums) == 0:
+        return 0
+    
+    prev1 = 0
+    prev2 = 0
+    for num in nums:
+        result = max((prev2 + num), prev1)
+        prev2 = prev1
+        prev1 = result
+    return result
 
-        if prev >= current:
-            if prev_index != i - 1:
-                total.append(prev)
-            prev_index = i - 1
-        else:
-            nums_prev = nums[prev_index]
-            if (nums_prev + current) > prev:
-                total.pop()
-                total.append(nums_prev)
-            total.append(current)
-            prev_index = i
-
-        i += 1
-    return sum(total)
+def rob_memoized_recursion(nums: List[int]) -> int:
+    memo = {}
+    def rob_houses(nums, i):
+        if i < 0:
+            return 0
+        if i in memo:
+            return memo[i]
+        result = max((rob_houses(nums, i - 2) + nums[i]), rob_houses(nums, i - 1))
+        memo[i] = result
+        return result
+    
+    return rob_houses(nums, len(nums) - 1)
 
 
-nums = [2,1,9,1,1,8,1,7,1,1,1,8,1,1,9,1,1,7]
+
+nums = [400,2,3,4,5]
 result = rob(nums)
 print(result)

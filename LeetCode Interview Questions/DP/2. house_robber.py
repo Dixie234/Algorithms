@@ -11,7 +11,7 @@ def rob(nums: List[int]) -> int:
         result = max((prev2 + num), prev1)
         prev2 = prev1
         prev1 = result
-    return result
+    return prev1
 
 def rob_memoized_recursion(nums: List[int]) -> int:
     memo = {}

@@ -2,30 +2,25 @@ from typing import List
 
 
 def wordBreak(s: str, wordDict: List[str]) -> bool:        
-    word_mapping = { word: word for i, word in enumerate(wordDict) }
+    word_mapping = set(wordDict)
+    memo = {}
     def check_words(s):
+        if s in memo:
+            return memo[s]
         if s in word_mapping:
             return True
         
         build_str = ""
-        possible_words = []
-        for char in s:
+        for i, char in enumerate(s):
             build_str += char
-            if build_str in word_mapping:
-                possible_words.append(build_str)
-        
-        if not possible_words:
-            return False
-        
-        for word in possible_words:
-            result = check_words(s[len(word):])
-            if result:
+            if build_str in word_mapping and check_words(s[i + 1:]):
+                memo[s] = True
                 return True
-            
-        return False
-    result = check_words(s)
+        memo[s] = False
 
-    return result
+        return False
+    
+    return check_words(s)   
 
 # s = "catsandog"
 # wordDict = ["cats","dog","sand","and","cat"]

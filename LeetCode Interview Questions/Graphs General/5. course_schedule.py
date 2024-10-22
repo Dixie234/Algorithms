@@ -1,4 +1,5 @@
 from collections import deque
+import copy
 from typing import List
 
 
@@ -23,36 +24,40 @@ def build_graph(edges:list[int, int]):
         graph[l].add_edge(graph[r])
     return graph
 
+#use Kahn's algorithm
 def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
     graph = build_graph(prerequisites)
     visited = set()
 
-    def bfs(node:Node):
-        queue = deque([node])
-        visited_bfs = set([node])
-        visited.add(node)
+    def dfs(node:Node, visited_dfs:set):
+        if node.value in visited_dfs:
+            return False
+        else:    
+            visited_dfs.add(node.value)
 
-        while queue:
-            curr = queue.popleft()
-            for edge in curr.edges:
-                if edge.value == node.value:
-                    return False
-                if edge not in visited:
-                    visited.add(edge)
-                if edge not in visited_bfs:
-                    queue.append(edge)
-                    visited_bfs.add(edge)
+        visited.add(node.value)
+
+        for edge in node.edges:
+            visited_copy = copy.deepcopy(visited_dfs)
+            result = dfs(edge, visited_copy)
+            if not result:
+                return False
+
         return True
-    
+
     for num, node in graph.items():
-        if node not in visited:
-            result = bfs(node)
+        if node.value not in visited:
+            result = dfs(node, set())
             if not result:
                 return False
             
     return True
 
-preq = [[1,0],[2,0],[0,2]]
-numCourses = 3
-result = canFinish(numCourses, preq)
+# preq = [[1,0],[2,0],[0,2]]
+# numCourses = 3
+# prerequisites = [[1,2],[1,3],[1,4],[2,6],[3,5],[4,5]]
+# numCourses = 7
+prerequisites = [[1,4],[2,4],[3,1],[3,2]]
+numCourses = 5
+result = canFinish(numCourses, prerequisites)
 print(result)

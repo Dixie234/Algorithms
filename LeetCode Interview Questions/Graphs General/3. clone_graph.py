@@ -28,21 +28,6 @@ def cloneGraph(node: Optional['Node']) -> Optional['Node']:
             visited[curr.val].neighbors.append(visited[neighbor.val])
     return visited[node.val]
 
-def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
-    if not node:
-        return None
-    cloned = {}
-    stack = [node]
-    cloned[node] = Node(node.val)
-    while stack:
-        curr = stack.pop()
-        for neighbor in curr.neighbors:
-            if neighbor not in cloned:
-                cloned[neighbor] = Node(neighbor.val)
-                stack.append(neighbor)
-            cloned[curr].neighbors.append(cloned[neighbor])
-    return cloned[node]
-
 node1 = Node(1)
 node2 = Node(2)
 node3 = Node(3)

@@ -1,4 +1,4 @@
-from collections import Counter
+from collections import Counter, defaultdict, deque
 from typing import List
 
 #Eulerian Path is a path of edges that visits all the edges in a graph exactly once.
@@ -19,15 +19,21 @@ from typing import List
 # in degree - number of incoming edges
 # out degree - number of outgoing edges
 
-def get_node_degrees(graph:List[List[int]]):
-    in_count = Counter([pair[1] for pair in graph])
-    out_count = Counter([pair[0] for pair in graph])
-    edge_count = len(graph)
-    return in_count, out_count, edge_count
+def get_node_degrees(graph:List[List[int]]) -> tuple[defaultdict, defaultdict, deque]:
+    in_degree = defaultdict(int)
+    out_degree = defaultdict(int)
+    adjacency_matrix = defaultdict(deque)
+
+    for start, end in graph:
+        adjacency_matrix[start].append(end)
+        in_degree[end] += 1
+        out_degree[start] += 1
+
+    return in_degree, out_degree, adjacency_matrix
 
 graph = [[5,1],[4,5],[11,9],[9,4]]
-inarr, outarr, edgecount = get_node_degrees(graph)
-print(inarr,outarr,edgecount)
+inarr, outarr, adjacency_matrix = get_node_degrees(graph)
+print(inarr, outarr, adjacency_matrix)
 
 #This therefore creates a matrix of required properties depending on the graph type your dealing with
 #and whether you're interested in finding a Eulerian path or circuit.
@@ -81,39 +87,75 @@ print(has_path)
 #If all nodes have equal degree's then we have a eulerian circuit - see point 3 above for logic - which means we can start at any node.
 
 #This function assumes that Eulerian path has already been found.
-def find_start_end_nodes(graph:List[List[int]]):
+def find_start_node(graph:List[List[int]]):
     inarr, outarr, _ = get_node_degrees(graph)
     start = 0
-    end = 0
-    for k, v in inarr.items():
-        diff = v - outarr.get(k, 0)
-        if diff == 1:
-            end = k
     for k, v in outarr.items():
         diff = v - inarr.get(k, 0)
         if diff == 1:
+            return k
+        elif v > 0:
             start = k
-    #check for eulerian circuit
-    if start == 0 and end == 0:
-        return graph[0][0], graph[0][0]
-    else:
-        return start, end
+    return start
 
 graph = [[5,1],[4,5],[11,9],[9,4]]
-start, end = find_start_end_nodes(graph)
-print(start, end)
+start = find_start_node(graph)
+print(start)
     
 #Next, we need to traverse the path. If done using a naive DFS from our start and end nodes, this won't give us the correct answer.
 #However, this can be done by backtracking a dfs search for each of the nodes and seeing if you visited every edge once.
 #You can reuse the out degrees count for this, and reduce the count by 1 each time you traverse an edge.
 #When the dfs gets stuck (ie no outgoing edges, ie out count = 0) you backtrack until you are able to traverse another edge.
 
-#This is known as Hierholzer's algorithm. Which has Time complexity is O(E) - edges.
+#This is known as Hierholzer's algorithm. Uses a stack instead of DFS recursion to traverse the graph.
+#Appends to the left of the path so that it is returned in the correct order.
+#Time complexity - O(V + E)
+#Space complexity - O(V + E)
+
 def hierholzers(graph:List[List[int]]) -> List[List[int]]:
-    inarr, outarr, _ = get_node_degrees(graph)
+    inarr, outarr, adj_matrix = get_node_degrees(graph)
+
     has_path = has_eulerian_path(graph)
     if not has_path:
         return None
-    start, end = find_start_end_nodes(graph)
-
     
+    start = find_start_node(graph)
+    path = deque()
+    stack = [start]
+    while stack:
+        node = stack[-1]
+        if adj_matrix[node]:
+            next = adj_matrix[node].popleft()
+            stack.append(next)
+        else:
+            path.appendleft(node)
+            stack.pop()
+
+    result = [[path[i - 1], path[i]] for i in range(1, len(path))]
+    return result
+
+#dfs solution uses post order dfs traversal to visit all of the nodes.
+def dfs(graph:List[List[int]]) -> List[List[int]]:
+    inarr, outarr, adj_matrix = get_node_degrees(graph)
+
+    has_path = has_eulerian_path(graph)
+    if not has_path:
+        return None
+    
+    start = find_start_node(graph)
+    path = deque()
+    
+    def postorder_dfs(node):
+        while adj_matrix[node]:
+            next = adj_matrix[node].popleft()
+            postorder_dfs(next)
+        path.appendleft(node)
+    
+    postorder_dfs(start)
+
+    result = [[path[i - 1], path[i]] for i in range(1, len(path))]
+    return result
+
+graph = [[5,1],[4,5],[11,9],[9,4]]
+start = hierholzers(graph)
+print(start)

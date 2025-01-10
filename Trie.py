@@ -1,6 +1,10 @@
 from typing import List, Optional
 
-
+#A Trie is a special form of N-ary Tree which is used to store strings. Each Trie node represents a string (prefix).
+#Paths to child nodes represent different characters, the strings in the child node represent the addition of that
+#character as well as the origin string. e.g. "a" --> "ab"
+#The root node is represented as an empty string. 
+#All decendants of a node share the same prefix string, which is why it's sometimes called a "Prefix Tree".
 class TrieNode:
     def __init__(self):
         self.children = {}

@@ -81,4 +81,40 @@ trie.insert("ran")
 trie.insert("the")
 trie.delete("rat")
 print(trie)
+
+#Another way of implementing the Trie can be to use a ordinal character array for each node instead of a dictionary.
+#This requires additional methods to be part of the Node class.
+
+class TrieNode:
+    def __init__(self):
+        self.children = [None] * 26
+
+    def _contains(self, character:str) -> bool:
+        return self.children[ord(character) - ord("a")] is not None
+
+    def _put(self, character:str, node:"TrieNode") -> None:
+        self.children[ord(character) - ord("a")] = node
     
+    def _next(self, character:str) -> "TrieNode":
+        return self.children[ord(character) - ord("a")]
+    
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word:str) -> None:
+        curr = self.root
+
+        for char in word:
+            if not curr._contains(char):
+                curr._put(char, TrieNode())
+            curr = curr._next(char)
+
+    def search(self, word:str) -> bool:
+        curr = self.root
+
+        for char in word:
+            if not curr._contains(char):
+                return False
+            curr = curr._next(char)
+        return True

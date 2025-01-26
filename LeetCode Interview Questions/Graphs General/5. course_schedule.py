@@ -2,56 +2,30 @@ from collections import deque
 import copy
 from typing import List
 
-
-class Node:
-    def __init__(self, value):
-        self.value = value
-        self.edges = []
-
-    def add_edge(self, node):
-        if node not in self.edges:
-            self.edges.append(node)
-
-def build_graph(edges:list[int, int]):
-    graph:dict[int, Node] = {}
-    for edge in edges:
-        l = edge[0]
-        r = edge[1]
-        if l not in graph:
-            graph[l] = Node(l)
-        if r not in graph:
-            graph[r] = Node(r)
-        graph[l].add_edge(graph[r])
-    return graph
-
-#use Kahn's algorithm
+#use Kahn's algorithm to iterate throught the graph
+#This performs a topological sort of the graph and excludes any cycles that it finds since cycles cannot be sorted.
+#In this problem we need to see if all courses are completeable, therefore there must be 0 cycles
+#If this is the case then the number of nodes visited must == numCourses
+#Time Complexity O(m + n) - Visits all nodes and edges in worst case.
+#Space Complexity O(m + n) - Adjaency array is of length m and indegrees is of length n.
 def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
-    graph = build_graph(prerequisites)
-    visited = set()
+    indegree = [0] * numCourses
+    adj = [[] for _ in range(numCourses)]
+    for edge in prerequisites:
+        indegree[edge[1]] += 1
+        adj[edge[0]].append(edge[1])
 
-    def dfs(node:Node, visited_dfs:set):
-        if node.value in visited_dfs:
-            return False
-        else:    
-            visited_dfs.add(node.value)
+    queue = deque([i for i in range(numCourses) if indegree[i] == 0])
+    result = 0
+    while queue:
+        curr = queue.popleft()
+        result += 1
+        for neighbour in prerequisites[curr]:
+            indegree[neighbour] -= 1
+            if indegree[neighbour] == 0:
+                queue.append(neighbour)
+    return result == numCourses
 
-        visited.add(node.value)
-
-        for edge in node.edges:
-            visited_copy = copy.deepcopy(visited_dfs)
-            result = dfs(edge, visited_copy)
-            if not result:
-                return False
-
-        return True
-
-    for num, node in graph.items():
-        if node.value not in visited:
-            result = dfs(node, set())
-            if not result:
-                return False
-            
-    return True
 
 # preq = [[1,0],[2,0],[0,2]]
 # numCourses = 3

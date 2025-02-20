@@ -2,7 +2,7 @@ from collections import deque
 import copy
 from typing import List
 
-#use Kahn's algorithm to iterate throught the graph
+#use Kahn's algorithm to iterate through the graph
 #This performs a topological sort of the graph and excludes any cycles that it finds since cycles cannot be sorted.
 #In this problem we need to see if all courses are completeable, therefore there must be 0 cycles
 #If this is the case then the number of nodes visited must == numCourses

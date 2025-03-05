@@ -1,6 +1,7 @@
 import math
 
 #1, 3, 9, 27, 81, 243
+#Use espsilon when dealing with floats to account for rounding errors
 def checkPowersOfThree(n: int) -> bool:
     used = set()
     epsilon = 1e-9

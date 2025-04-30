@@ -1,0 +1,2 @@
+def sherlockAndAnagrams(s:str):
+    
